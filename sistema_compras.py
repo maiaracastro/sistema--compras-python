@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import pyttsx3
+import threading
 
 # Configurações de aparência
 ctk.set_appearance_mode("dark")
@@ -7,7 +9,7 @@ ctk.set_default_color_theme("blue")
 class AppPDV(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("Sistema Mini PDV - Escola da Nuvem")
+        self.title("Sistema Mini PDV - Teste de Acessibilidade e Reset")
         self.geometry("550x750")
         
         # Variáveis de controle de valores
@@ -37,22 +39,60 @@ class AppPDV(ctk.CTk):
 
         # Botão 1: Adicionar Item
         self.btn_add = ctk.CTkButton(self.frame_botoes, text="Adicionar Item", command=self.adicionar_item, fg_color="#1f538d", hover_color="#14375e")
-        self.btn_add.pack(side="left", padx=10, expand=True, fill="x")
+        self.btn_add.pack(side="left", padx=5, expand=True, fill="x")
 
-        # Botão 2: Fechar Caixa / Emitir Nota
+        # Botão 2: Limpar Tela / Resetar Caixa
+        self.btn_limpar = ctk.CTkButton(self.frame_botoes, text="Limpar Tela", command=self.limpar_caixa, fg_color="#c0392b", hover_color="#962d22")
+        self.btn_limpar.pack(side="left", padx=5, expand=True, fill="x")
+
+        # Botão 3: Fechar Caixa / Emitir Nota
         self.btn_fechar = ctk.CTkButton(self.frame_botoes, text="Emitir Nota Fiscal", command=self.emitir_nota_fiscal, fg_color="#27ae60", hover_color="#1e8449")
-        self.btn_fechar.pack(side="right", padx=10, expand=True, fill="x")
+        self.btn_fechar.pack(side="left", padx=5, expand=True, fill="x")
 
         # Campo de Exibição (Cupom / Nota Fiscal)
         self.lista_itens = ctk.CTkTextbox(self, font=("Courier New", 14), height=300)
         self.lista_itens.pack(pady=10, padx=30, fill="both", expand=True)
         self.limpar_tela_cupom()
 
+        # Atalhos de Teclado para Acessibilidade
+        self.bind("<Return>", lambda event: self.adicionar_item())
+        self.bind("<Escape>", lambda event: self.limpar_caixa())
+
+    def _executar_voz(self, texto):
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', 160)
+            engine.say(texto)
+            engine.runAndWait()
+            engine.stop()
+        except Exception:
+            pass
+
+    def falar(self, texto):
+        t = threading.Thread(target=self._executar_voz, args=(texto,))
+        t.start()
+
+    def formatar_para_voz(self, valor):
+        return f"{valor:.2f}".replace('.', ',')
+
     def limpar_tela_cupom(self):
         self.lista_itens.delete("0.0", "end")
         self.lista_itens.insert("0.0", "            CUPOM EMITIDO EM TELA            \n")
         self.lista_itens.insert("end", "=============================================\n")
         self.lista_itens.insert("end", " Adicione produtos acima para iniciar...\n")
+
+    def limpar_caixa(self):
+        self.total_bruto = 0.0
+        self.produtos_adicionados = []
+        
+        self.entry_produto.delete(0, 'end')
+        self.entry_preco.delete(0, 'end')
+        self.entry_qtd.delete(0, 'end')
+        
+        self.limpar_tela_cupom()
+        self.entry_produto.focus()
+        
+        self.falar("Caixa limpo.")
 
     def adicionar_item(self):
         try:
@@ -66,41 +106,42 @@ class AppPDV(ctk.CTk):
             subtotal = preco * qtd
             self.total_bruto += subtotal
             
-            # Salva na lista interna do programa
             self.produtos_adicionados.append((nome, qtd, preco, subtotal))
             
-            # CORREÇÃO DA QUEBRA: Se for o primeiro item, limpa e quebra a linha antes do texto
             if len(self.produtos_adicionados) == 1:
                 self.lista_itens.delete("3.0", "end")
-                self.lista_itens.insert("end", "\n") # Pula a linha logo após os sinais de igual ====
+                self.lista_itens.insert("end", "\n")
 
-            # Formatação limpa: Nome e valores alinhados
             texto_item = f" -> {nome} ({qtd}x) - R$ {subtotal:.2f}\n"
             self.lista_itens.insert("end", texto_item)
             
-            # Limpa os campos de texto para o próximo produto
             self.entry_produto.delete(0, 'end')
             self.entry_preco.delete(0, 'end')
             self.entry_qtd.delete(0, 'end')
             self.entry_produto.focus()
             
+            total_falar = self.formatar_para_voz(self.total_bruto)
+            self.falar(f"{qtd} de {nome}. Total {total_falar} reais.")
+            
         except ValueError:
-            self.lista_itens.insert("end", "\n [ERRO]: Dados inválidos! Tente novamente.\n")
+            erro_msg = "\n [ERRO]: Dados inválidos! Tente novamente.\n"
+            self.lista_itens.insert("end", erro_msg)
+            self.falar("Dados inválidos.")
 
     def emitir_nota_fiscal(self):
         if not self.produtos_adicionados:
             self.lista_itens.delete("0.0", "end")
-            self.lista_itens.insert("0.0", " [AVISO]: O carrinho está vazio!\n Adicione itens antes de fechar a compra.")
+            aviso_msg = " [AVISO]: O carrinho está vazio!\n Adicione itens antes de fechar a compra."
+            self.lista_itens.insert("0.0", aviso_msg)
+            self.falar("Carrinho vazio.")
             return
 
-        # Regra de negócio: Cálculo do Desconto de 10% se passar de R$ 100
         desconto = 0.0
         if self.total_bruto > 100.00:
             desconto = self.total_bruto * 0.10
         
         total_liquido = self.total_bruto - desconto
 
-        # Montagem Visual Estilizada da Nota Fiscal (Formato Cupom)
         self.lista_itens.delete("0.0", "end")
         nota =  "=============================================\n"
         nota += "           NOTA FISCAL DE VENDA              \n"
@@ -128,9 +169,18 @@ class AppPDV(ctk.CTk):
         
         self.lista_itens.insert("0.0", nota)
         
-        # Reseta os acumuladores para uma nova venda futura
-        self.total_bruto = 0.0
-        self.produtos_adicionados = []
+        # CORREÇÃO CRÍTICA: Força a janela a atualizar o desenho do texto antes de soltar a voz
+        self.update_idletasks()
+        
+        desconto_falar = self.formatar_para_voz(desconto)
+        liquido_falar = self.formatar_para_voz(total_liquido)
+        
+        if desconto > 0:
+            frase_curta = f"Desconto de {desconto_falar} reais aplicado. Total a pagar: {liquido_falar} reais."
+        else:
+            frase_curta = f"Sem descontos. Total a pagar: {liquido_falar} reais."
+        
+        self.falar(frase_curta)
 
 if __name__ == "__main__":
     app = AppPDV()
