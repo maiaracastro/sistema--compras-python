@@ -133,6 +133,15 @@ automaticamente 10% de desconto sobre o valor total.
 
 👩‍💻 Desenvolvido por alunos da Escola da Nuvem
 
-- Derli Joaquim de Souza
-- Maiara Souza de Castro
-- Gabriela Silva
+## 👥 Estrutura da Equipe e Engenharia Colaborativa
+
+O projeto foi desenvolvido em formato de Startup (GMD) através do Discord, simulando um fluxo real de engenharia de software no mercado de trabalho:
+
+* **Derli Joaquim de Souza (Desenvolvedor da Inteligência de Negócio)** 
+  * Responsável pela criação da lógica matemática inicial em terminal, estruturando o algoritmo de soma contínua e a regra de negócio principal para aplicação automatizada do desconto de 10%.
+* **Maiara Souza de Castro (Engenheira de Software e Interface)** 
+  * Responsável pela refatoração e evolução do sistema, realizando a migração completa do terminal para uma Interface Gráfica Avançada (GUI) com CustomTkinter, arquitetura orientada a objetos (classes), segurança e tratamento de dados (`try/except`) e estilização da nota fiscal.
+* **Gabriela Silva (Gerência de Configuração e QA)**
+  * Responsável pela infraestrutura do repositório original no GitHub, gerenciamento de acessos da equipe e testes de qualidade do software.
+
+ Atualizando papéis da equipe no README.
