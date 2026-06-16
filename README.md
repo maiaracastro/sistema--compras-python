@@ -131,6 +131,19 @@ Regra de negócio
 Se o total da compra ultrapassar R$ 100,00, o sistema aplica
 automaticamente 10% de desconto sobre o valor total.
 
+♿ Acessibilidade e Evolução do Sistema (Novas Implementações)
+
+Como parte da evolução do sistema e do nosso compromisso com a responsabilidade social e governança (padrões de acessibilidade), o Mini PDV recebeu atualizações importantes de infraestrutura para permitir maior inclusão, agilidade e robustez no uso:
+
+* **Interface Não-Bloqueante (Multithreading):** Implementação da biblioteca `threading` do Python para criar linhas de execução assíncronas em segundo plano. Isso impede que o motor de voz trave ou congele o fluxo visual da janela do CustomTkinter durante a operação do sistema.
+* **Síntese de Voz Nativa (`pyttsx3`):** Integração de um motor de áudio que realiza o feedback falado em tempo real das operações centrais (quantidade e nome do produto adicionado, alertas de dados inválidos e resumo do fechamento do caixa).
+* **Tratamento de Fonemas para Moedas:** Desenvolvimento de algoritmo interno para conversão dinâmica de dados numéricos estruturados (`float` com ponto) para strings amigáveis com vírgulas, forçando o sintetizador de voz a pronunciar os valores monetários por extenso corretamente (ex: lendo "duzentos e dezesseis reais" em vez de dígitos isolados).
+* **Navegação Otimizada por Atalhos:** Mapeamento do teclado através de bindings de eventos para agilizar as funções do operador de forma híbrida:
+  * `Tecla Enter (<Return>)`: Adiciona e computa o produto automaticamente a partir de qualquer campo de texto.
+  * `Tecla Esc (<Escape>)`: Aciona o comando de limpar e resetar o estado do caixa.
+* **Sincronismo de Interface (`update_idletasks`):** Implementação de controle de prioridade que força a interface gráfica a renderizar o cupom fiscal na tela antes de disparar o áudio, eliminando gargalos de processamento entre o Python e o sistema operacional.
+* **Botão de Reset Seguro (Limpar Tela):** Inclusão de um controle manual para limpeza imediata de buffers de memória, esvaziamento das listas de produtos e reinicialização dos campos para uma nova venda.
+
 👩‍💻 Desenvolvido por alunos da Escola da Nuvem
 
 ## 👥 Estrutura da Equipe e Engenharia Colaborativa
