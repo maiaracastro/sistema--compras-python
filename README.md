@@ -15,17 +15,20 @@ automaticamente um desconto de 10% no total.
 Como uma operadora de caixa, porém virtual.
 
 ---
- Requisitos
+Requisitos
 
-- Computador (o sistema não roda em celular)
+- Computador (o sistema de janela/desktop não roda em celular)
 - Windows (Utilizando o comando python)
 - Linux e macOS (Utilizando o comando python3)
+- Celular ou tablet com sistema IOS ou Android (para a versão Web Mobile)
 - Biblioteca customtkinter instalada (para o Mini PDV com interface gráfica)
+- Bibliotecas streamlit e gTTS instaladas (para a versão App Mobile)
 
-
+# Para a versão Mini PDV com Interface Gráfica (Desktop)
 pip install customtkinter
 
-
+# Para a versão App Mobile (Web)
+pip install streamlit gTTS
 ---
 
  Versões do Sistema
@@ -99,6 +102,33 @@ Exemplo de cupom gerado:
 =============================================
 ```
 
+---
+
+### Versão 3 — Web Mobile (Nuvem) :mobile_phone: `NOVO`
+
+Versão portátil desenvolvida com foco em mobilidade e acessibilidade web, permitindo que o sistema seja operado diretamente de smartphones ou tablets através de um link público em nuvem.
+
+* **Link do Aplicativo no Ar:** [Acessar Sistema de Compras Web](https://sistema--compras-python-jqjtmofziwtr6g4jfhdpfx.streamlit.app/)
+
+Como usar:
+1. Acesse o link público pelo navegador do celular ou computador.
+2. Utilize a interface simplificada para registrar os produtos e quantidades.
+3. O sistema calcula os subtotais e exibe o fechamento da compra em tempo real de forma responsiva.
+
+---
+
+### Versão 3 — Web Mobile (Nuvem) 📱 *NOVO*
+
+Versão portátil desenvolvida com foco em mobilidade e acessibilidade web, permitindo que o sistema seja operado diretamente de smartphones ou tablets através de um link público em nuvem.
+
+* **🔗 Link de Acesso pelo Celular:** [Clique aqui para abrir o sistema](https://sistema--compras-python-jqjtmofziwtr6g4jfhdpfx.streamlit.app/)
+
+Como usar:
+1. Acesse o link público pelo navegador do celular ou computador.
+2. Utilize a interface simplificada para registrar os produtos e quantidades.
+3. O sistema calcula os subtotais e exibe o fechamento da compra em tempo real de forma responsiva.
+
+---
 
  Funcionalidades
 
@@ -144,7 +174,6 @@ Como parte da evolução do sistema e do nosso compromisso com a responsabilidad
 * **Sincronismo de Interface (`update_idletasks`):** Implementação de controle de prioridade que força a interface gráfica a renderizar o cupom fiscal na tela antes de disparar o áudio, eliminando gargalos de processamento entre o Python e o sistema operacional.
 * **Botão de Reset Seguro (Limpar Tela):** Inclusão de um controle manual para limpeza imediata de buffers de memória, esvaziamento das listas de produtos e reinicialização dos campos para uma nova venda.
 
-👩‍💻 Desenvolvido por alunos da Escola da Nuvem
 
 ## 👥 Estrutura da Equipe e Engenharia Colaborativa
 
@@ -156,5 +185,7 @@ O projeto foi desenvolvido em formato de Startup (GMD) através do Discord, simu
   * Responsável pela refatoração e evolução do sistema, realizando a migração completa do terminal para uma Interface Gráfica Avançada (GUI) com CustomTkinter, arquitetura orientada a objetos (classes), segurança e tratamento de dados (`try/except`) e estilização da nota fiscal.
 * **Gabriela Silva (Gerência de Configuração e QA)**
   * Responsável pela infraestrutura do repositório original no GitHub, gerenciamento de acessos da equipe e testes de qualidade do software.
+
+👩‍💻 Desenvolvido por alunos da Escola da Nuvem
 
  Atualizando papéis da equipe no README.
